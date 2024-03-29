@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTMX GO App</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://unpkg.com/htmx.org@1.9.11/dist/htmx.min.js"></script>
+    <script>
+      htmx.on("htmx:beforeSwap", function(e) {
+        if (e.detail.status >= 400) {
+          alert("Error calculating: " + e.detail.text);
+          e.preventDefault();
+        }
+      });
+
+      let expression = ""; // Initialize empty expression string
+
+      function updateExpression(value) {
+        expression += value;
+        document.getElementById("result").value = expression;
+      }
+
+      function calculate() {
+        // Ensure server-side script can handle all operators and expressions
+        if (!/^[0-9\+\-\*\/\.]+$/.test(expression)) {
+          alert("Invalid expression. Please use valid operators and numbers.");
+          return;
+        }
+
+        // Use `hx-post` for complex calculations, potentially with JSON data
+        document.getElementById("result").hxPost("/calculate", { expression: expression })
+          .then(response => {
+            expression = response.text; // Update expression with calculated result
+            document.getElementById("result").value = expression;
+          })
+          .catch(error => {
+            // Handle potential server-side errors or parsing issues
+            console.error("Calculation error:", error);
+            alert("An error occurred during calculation. Please try again.");
+          });
+      }
+
+      function clearExpression() {
+        expression = "";
+        document.getElementById("result").value = "";
+      }
+    </script>
+  </head>
+  <body>
+    <div class="calculator">
+      <input type="text" id="result" readonly>
+      <div class="buttons">
+        <button class="clear" hx-get="/clear">C</button>
+        <button class="operator" hx-get="/append?value=%2F">/</button>
+        <button class="operator" hx-get="/append?value=%2A">*</button>
+        <button class="operator" hx-get="/append?value=%2D">-</button>
+        <button class="number" hx-get="/append?value=7">7</button>
+        <button class="number" hx-get="/append?value=8">8</button>
+        <button class="number" hx-get="/append?value=9">9</button>
+        <button class="operator" hx-get="/append?value=%2B">+</button>
+        <button class="number" hx-get="/append?value=4">4</button>
+        <button class="number" hx-get="/append?value=5">5</button>
+        <button class="number" hx-get="/append?value=6">6</button>
+        <button class="equals" hx-get="/calculate">=</button>
+        <button class="number" hx-get="/append?value=1">1</button>
+        <button class="number" hx-get="/append?value=2">2</button>
+        <button class="number" hx-get="/append?value=3">3</button>
+        <button class="number" hx-get="/append?value=0">0</button>
+        <button class="decimal" hx-get="/append?value=%2E">.</button>
+      </div>
+    </div>
+  </body>
+</html>
