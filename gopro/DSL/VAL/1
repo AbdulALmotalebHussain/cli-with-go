@@ -1,0 +1,15 @@
+package main
+
+type Node struct {
+
+    Value       int
+    left
+
+    right
+}
+
+
+
+func main()  {
+
+}

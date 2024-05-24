@@ -1,0 +1,10 @@
+air.toml
+books.sqlite
+db.go
+go.mod
+go.sum
+main.go
+./
+../
+.env
+.vscode/

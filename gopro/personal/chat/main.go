@@ -61,6 +61,6 @@ func wsHandler(w http.ResponseWriter, r *http.Request) {
 func main() {
     http.HandleFunc("/ws", wsHandler)
     http.Handle("/", http.FileServer(http.Dir("./public")))
-    log.Println("Server started on :8080")
-    log.Fatal(http.ListenAndServe(":8080", nil))
+    log.Println("Server started on localhost:8080")
+    log.Fatal(http.ListenAndServe("localhost:8080", nil))
 }

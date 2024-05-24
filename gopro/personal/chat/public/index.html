@@ -15,21 +15,21 @@
 <button onclick="sendMessage()">Send</button>
 
 <script>
-    var ws;
+    let ws;
 
     function connectWebSocket() {
         ws = new WebSocket("ws://" + window.location.host + "/ws");
 
         ws.onmessage = function(event) {
-            var chat = document.getElementById("chat");
-            var msg = document.createElement("div");
+            const chat = document.getElementById("chat");
+            const msg = document.createElement("div");
             msg.textContent = event.data;
             chat.appendChild(msg);
         };
     }
 
     function sendMessage() {
-        var input = document.getElementById("messageInput");
+        const input = document.getElementById("messageInput");
         if (input.value.trim() !== "") {
             ws.send(input.value);
             input.value = "";

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Gallery</title>
+    <script src="https://unpkg.com/htmx.org/dist/htmx.js"></script>
+</head>
+<body>
+    <h1>Image Gallery</h1>
+    <form id="uploadForm" enctype="multipart/form-data" hx-post="/upload">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required><br><br>
+        <label for="description">Description:</label>
+        <textarea id="description" name="description" required></textarea><br><br>
+        <label for="image">Choose Image:</label>
+        <input type="file" id="image" name="image" accept="image/*" required><br><br>
+        <button type="submit">Upload</button>
+    </form>
+    <hr>
+    <h2>Image List</h2>
+    <ul id="imageList" hx-get="/list">
+        <li hx-swap="outerHTML">Loading...</li>
+    </ul>
+    <script>
+        document.getElementById('imageList').addEventListener('click', function(event) {
+            if (event.target.classList.contains('deleteBtn')) {
+                if (confirm('Are you sure you want to delete this image?')) {
+                    fetch('/delete/' + event.target.dataset.id, { method: 'DELETE' })
+                        .then(response => response.text())
+                        .then(data => {
+                            console.log(data);
+                            document.getElementById('imageList').innerHTML = data;
+                        })
+                        .catch(error => console.error('Error:', error));
+                }
+            }
+        });
+    </script>
+</body>
+</html>
